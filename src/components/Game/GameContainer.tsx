@@ -179,9 +179,7 @@ const GameContainer: React.FC = () => {
 
     return (
         <div className={styles.gameWrapper}>
-            <Link href="/admin" className={styles.adminBtn}>
-                <Lock size={16} /> Admin
-            </Link>
+
             {gameState !== 'REGISTER' && (
                 <ScoreDisplay score={score} highScore={highScore} round={gameState === 'GAME_OVER' ? MAX_ROUNDS : round} maxRounds={MAX_ROUNDS} />
             )}
