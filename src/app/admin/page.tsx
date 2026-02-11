@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, orderBy, query, doc, updateDoc } from 'firebase/firestore';
-import { Lock, Eye, X, Check, XCircle, Calculator } from 'lucide-react';
+import { Lock, Eye, X, Check, XCircle, Calculator, Download, Filter } from 'lucide-react';
 
 const ADMIN_PASSWORD = "Velvet10";
 
@@ -20,7 +20,7 @@ interface RoundData {
 interface GameResult {
     id: string;
     name: string;
-    email: string;
+    studentId: string;
     totalScore: number;
     roundsCompleted: number;
     rounds?: RoundData[];
@@ -34,6 +34,9 @@ export default function AdminPage() {
     const [results, setResults] = useState<GameResult[]>([]);
     const [selectedResult, setSelectedResult] = useState<GameResult | null>(null);
     const [loading, setLoading] = useState(false);
+    const [showBatchModal, setShowBatchModal] = useState(false);
+    const [batchInput, setBatchInput] = useState('');
+    const [processingBatch, setProcessingBatch] = useState(false);
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,6 +62,85 @@ export default function AdminPage() {
             console.error("Error fetching results:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleExportInputs = () => {
+        const allInputs = new Set<string>();
+        results.forEach(res => {
+            if (res.rounds) {
+                res.rounds.forEach(r => {
+                    if (r.input && r.input.trim().length > 0 && r.verified !== true) {
+                        allInputs.add(r.input.trim().toUpperCase());
+                    }
+                });
+            }
+        });
+
+        const exportText = Array.from(allInputs).sort().join('\n');
+        navigator.clipboard.writeText(exportText).then(() => {
+            alert(`Copied ${allInputs.size} unique inputs to clipboard! Paste into your AI tool.`);
+        });
+    };
+
+    const handleBatchVerify = async () => {
+        if (!batchInput.trim()) return;
+        setProcessingBatch(true);
+
+        // Normalize approved terms
+        const approvedTerms = new Set(
+            batchInput.split(/[\n,]+/).map(t => t.trim().toUpperCase()).filter(t => t.length > 0)
+        );
+
+        let updateCount = 0;
+
+        try {
+            // Process all results locally first
+            const updates = results.map(async (res) => {
+                let modified = false;
+                if (!res.rounds) return res;
+
+                const newRounds = res.rounds.map(r => {
+                    // Only verify if currently not verified (null/false) and matches approved list
+                    if (r.verified !== true && r.input && approvedTerms.has(r.input.trim().toUpperCase())) {
+                        modified = true;
+                        return { ...r, verified: true };
+                    }
+                    return r;
+                });
+
+                if (modified) {
+                    // Calculate new score
+                    let newScore = 0;
+                    newRounds.forEach(r => {
+                        if (r.verified === true) newScore += r.score;
+                    });
+
+                    // Update Firestore
+                    const resultRef = doc(db, "results", res.id);
+                    await updateDoc(resultRef, {
+                        rounds: newRounds,
+                        verifiedScore: newScore
+                    });
+
+                    updateCount++;
+                    return { ...res, rounds: newRounds, verifiedScore: newScore };
+                }
+                return res;
+            });
+
+            await Promise.all(updates);
+
+            // Refresh local state
+            fetchResults();
+            alert(`Batch verification complete! Updated ${updateCount} records.`);
+            setShowBatchModal(false);
+            setBatchInput('');
+        } catch (error) {
+            console.error("Batch update error:", error);
+            alert("Error running batch verification");
+        } finally {
+            setProcessingBatch(false);
         }
     };
 
@@ -167,7 +249,15 @@ export default function AdminPage() {
         <div className={styles.dashboard}>
             <header className={styles.header}>
                 <h1>Admin Dashboard</h1>
-                <button onClick={fetchResults} className={styles.refreshBtn}>Refresh Data</button>
+                <div className={styles.headerActions}>
+                    <button onClick={handleExportInputs} className={styles.actionBtn} title="Export unverified inputs for AI">
+                        <Download size={16} /> Export Inputs
+                    </button>
+                    <button onClick={() => setShowBatchModal(true)} className={styles.actionBtn} title="Batch Verify with AI List">
+                        <Filter size={16} /> Batch Verify
+                    </button>
+                    <button onClick={fetchResults} className={styles.refreshBtn}>Refresh Data</button>
+                </div>
             </header>
 
             <div className={styles.tableContainer}>
@@ -187,7 +277,7 @@ export default function AdminPage() {
                                 <td>
                                     <div className={styles.nameCell}>
                                         <span className={styles.name}>{res.name}</span>
-                                        <span className={styles.email}>{res.email}</span>
+                                        <span className={styles.email}>{res.studentId}</span>
                                     </div>
                                 </td>
                                 <td className={styles.score}>{Number(res.totalScore || (res as any).score || 0).toFixed(1)}</td>
@@ -277,6 +367,40 @@ export default function AdminPage() {
                             ) : (
                                 <p>No round data available.</p>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showBatchModal && (
+                <div className={styles.modalOverlay} onClick={() => setShowBatchModal(false)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2>Batch Verification</h2>
+                            <button className={styles.closeBtn} onClick={() => setShowBatchModal(false)}>
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <div className={styles.modalBody}>
+                            <p>Paste the list of approved terms below (separated by newlines or commas). These will be automatically marked as verified in all records.</p>
+                            <textarea
+                                className={styles.batchInput}
+                                value={batchInput}
+                                onChange={(e) => setBatchInput(e.target.value)}
+                                placeholder="PASTE APPROVED TERMS HERE..."
+                                rows={10}
+                                style={{ width: '100%', padding: '10px', margin: '10px 0', fontFamily: 'monospace' }}
+                            />
+                            <div className={styles.modalFooter} style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                                <button className={styles.actionBtn} onClick={() => setShowBatchModal(false)}>Cancel</button>
+                                <button
+                                    className={`${styles.actionBtn} ${styles.activeGreen}`}
+                                    onClick={handleBatchVerify}
+                                    disabled={processingBatch}
+                                >
+                                    {processingBatch ? 'Processing...' : 'Verify Matches'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

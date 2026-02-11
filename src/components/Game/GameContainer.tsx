@@ -7,17 +7,20 @@ import InputArea from './InputArea';
 import ScoreDisplay from './ScoreDisplay';
 import RegistrationForm from './RegistrationForm';
 import styles from './GameContainer.module.css';
-import { Play, RotateCcw, Save } from 'lucide-react';
+import { Play, RotateCcw, Save, Lock } from 'lucide-react';
 import { db } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import Link from 'next/link';
+import { isTechTerm } from '@/data/techDictionary';
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const GAME_DURATION = 15; // seconds per turn
+// Removing Q, X, Y, Z as they are harder. Keeping others.
+const ALPHABET = "ABCDEFGHIJKLMNOPRSTUVW";
+const GAME_DURATION = 45; // seconds per turn
 const MAX_ROUNDS = 15;
 
 interface Participant {
     name: string;
-    email: string;
+    studentId: string;
 }
 
 interface RoundData {
@@ -26,6 +29,7 @@ interface RoundData {
     input: string;
     timeLeft: number;
     score: number;
+    verified?: boolean | null;
 }
 
 const GameContainer: React.FC = () => {
@@ -46,8 +50,8 @@ const GameContainer: React.FC = () => {
         return ALPHABET[randomIndex];
     }, []);
 
-    const handleRegister = (name: string, email: string) => {
-        setParticipant({ name, email });
+    const handleRegister = (name: string, studentId: string) => {
+        setParticipant({ name, studentId });
         setGameState('IDLE');
     };
 
@@ -77,7 +81,8 @@ const GameContainer: React.FC = () => {
             letter: currentLetter,
             input: inputValue,
             timeLeft: timeRemaining,
-            score: points
+            score: points,
+            verified: isTechTerm(inputValue) ? true : null
         };
 
         const updatedHistory = [...roundsHistory, newRoundData];
@@ -109,7 +114,7 @@ const GameContainer: React.FC = () => {
             try {
                 await addDoc(collection(db, "results"), {
                     name: participant.name,
-                    email: participant.email,
+                    studentId: participant.studentId,
                     totalScore: finalScore,
                     roundsCompleted: MAX_ROUNDS,
                     rounds: history, // Save detailed history
@@ -174,6 +179,9 @@ const GameContainer: React.FC = () => {
 
     return (
         <div className={styles.gameWrapper}>
+            <Link href="/admin" className={styles.adminBtn}>
+                <Lock size={16} /> Admin
+            </Link>
             {gameState !== 'REGISTER' && (
                 <ScoreDisplay score={score} highScore={highScore} round={gameState === 'GAME_OVER' ? MAX_ROUNDS : round} maxRounds={MAX_ROUNDS} />
             )}
@@ -187,7 +195,7 @@ const GameContainer: React.FC = () => {
                     <div className={styles.overlay}>
                         <h1 className={styles.title}>TECH CHARADS</h1>
                         <p className={styles.instruction}>Welcome, <span className={styles.highlight}>{participant?.name}</span></p>
-                        <p className={styles.instruction}>15 Rounds • 15 Seconds Each</p>
+                        <p className={styles.instruction}>15 Rounds • 45 Seconds Each</p>
                         <button className={styles.actionBtn} onClick={startGame}>
                             <Play size={24} /> START GAME
                         </button>

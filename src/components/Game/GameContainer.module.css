@@ -6,6 +6,32 @@
     min-height: 80vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    /* Added for absolute positioning context if needed, though flex works too */
+}
+
+.adminBtn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.8rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    z-index: 20;
+}
+
+.adminBtn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .mainArea {
