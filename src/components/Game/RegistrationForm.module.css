@@ -1,0 +1,113 @@
+.container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    padding: 3rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    animation: fadeIn 0.5s ease-out;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+    color: var(--primary);
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputGroup {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    position: absolute;
+    left: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+}
+
+.input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 1rem 1rem 3rem;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px var(--primary-glow);
+    background: rgba(0, 240, 255, 0.05);
+}
+
+.submitBtn {
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 50px;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px var(--secondary-glow);
+}
+
+.submitBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px var(--secondary-glow);
+}
+
+.error {
+    color: var(--accent);
+    text-align: center;
+    font-size: 0.9rem;
+    animation: shake 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}

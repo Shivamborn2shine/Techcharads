@@ -1,0 +1,113 @@
+.gameWrapper {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.mainArea {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    border-radius: 20px;
+    text-align: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.title {
+    font-size: 4rem;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.instruction {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 1rem;
+}
+
+.highlight {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.actionBtn {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px var(--primary-glow);
+    margin-top: 1rem;
+}
+
+.actionBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px var(--primary-glow);
+}
+
+.gameOverTitle {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+
+.finalScore {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.saving {
+    color: var(--primary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    animation: pulse 1s infinite;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}

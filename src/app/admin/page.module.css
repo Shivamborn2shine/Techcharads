@@ -1,0 +1,333 @@
+.loginContainer {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--background);
+}
+
+.loginForm {
+    background: var(--glass-bg);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.lockIcon {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.loginBtn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    transition: opacity 0.2s;
+}
+
+.loginBtn:hover {
+    opacity: 0.9;
+}
+
+/* Dashboard */
+.dashboard {
+    min-height: 100vh;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.refreshBtn {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.refreshBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.tableContainer {
+    background: var(--glass-bg);
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table th {
+    background: rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.nameCell {
+    display: flex;
+    flex-direction: column;
+}
+
+.name {
+    font-weight: 600;
+    color: #fff;
+}
+
+.email {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.score {
+    color: #fff;
+    opacity: 0.7;
+}
+
+.verifiedScore {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.viewBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.viewBtn:hover {
+    background: rgba(0, 240, 255, 0.2);
+}
+
+/* Modal */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 2rem;
+}
+
+.modal {
+    background: #1a1a1a;
+    width: 100%;
+    max-width: 800px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.modalHeader {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.closeBtn:hover {
+    color: #fff;
+}
+
+.modalBody {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.statGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.statBox {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.statBox label {
+    display: block;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 0.5rem;
+}
+
+.statBox span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.highlightScore {
+    color: var(--primary) !important;
+}
+
+.roundsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.roundItem {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.accepted {
+    background: rgba(0, 255, 100, 0.1);
+    border-color: rgba(0, 255, 100, 0.3);
+}
+
+.rejected {
+    background: rgba(255, 0, 80, 0.1);
+    border-color: rgba(255, 0, 80, 0.3);
+    opacity: 0.7;
+}
+
+.roundHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding-right: 1rem;
+    margin-right: 1rem;
+}
+
+.roundNum {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.roundLetter {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.roundDetails {
+    flex: 1;
+}
+
+.inputVal {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.inputVal strong {
+    color: #fff;
+}
+
+.roundStats {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    gap: 1rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actionBtn {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s;
+}
+
+.actionBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.activeGreen {
+    background: rgba(0, 255, 100, 0.2);
+    color: #00ff64;
+}
+
+.activeRed {
+    background: rgba(255, 0, 80, 0.2);
+    color: #ff0050;
+}
