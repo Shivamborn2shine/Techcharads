@@ -8,7 +8,7 @@ interface RegistrationFormProps {
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegister }) => {
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [studentId, setStudentId] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -17,7 +17,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegister }) => {
             setError('Name is required');
             return;
         }
-        onRegister(name.trim(), email.trim());
+        if (!studentId.trim()) {
+            setError('Student ID is required');
+            return;
+        }
+        onRegister(name.trim(), studentId.trim());
     };
 
     return (
@@ -37,13 +41,14 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onRegister }) => {
                 </div>
 
                 <div className={styles.inputGroup}>
-                    <span className={styles.icon}>@</span>
+                    <span className={styles.icon}>#</span>
                     <input
-                        type="email"
-                        placeholder="Email (Optional)"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="text"
+                        placeholder="Student ID (Required)"
+                        value={studentId}
+                        onChange={(e) => setStudentId(e.target.value)}
                         className={styles.input}
+                        required
                     />
                 </div>
 
