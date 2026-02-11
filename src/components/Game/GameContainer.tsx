@@ -44,6 +44,7 @@ const GameContainer: React.FC = () => {
     const [inputError, setInputError] = useState<boolean>(false);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [roundsHistory, setRoundsHistory] = useState<RoundData[]>([]);
+    const [endTime, setEndTime] = useState<number | null>(null);
 
     const generateLetter = useCallback(() => {
         const randomIndex = Math.floor(Math.random() * ALPHABET.length);
@@ -64,6 +65,8 @@ const GameContainer: React.FC = () => {
 
     const startTurn = () => {
         setCurrentLetter(generateLetter());
+        const durationMs = GAME_DURATION * 1000;
+        setEndTime(Date.now() + durationMs);
         setTimeLeft(GAME_DURATION);
         setInputVal('');
         setGameState('PLAYING');
@@ -134,21 +137,22 @@ const GameContainer: React.FC = () => {
     useEffect(() => {
         let interval: NodeJS.Timeout;
 
-        if (gameState === 'PLAYING') {
+        if (gameState === 'PLAYING' && endTime) {
             interval = setInterval(() => {
-                setTimeLeft((prev) => {
-                    if (prev <= 0.1) {
-                        // Time ran out
-                        handleRoundEnd(0, 0, inputVal); // Pass current input even if incomplete
-                        return 0;
-                    }
-                    return prev - 0.1;
-                });
+                const now = Date.now();
+                const remaining = Math.max(0, (endTime - now) / 1000);
+
+                setTimeLeft(remaining);
+
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    handleRoundEnd(0, 0, inputVal); // Time ran out
+                }
             }, 100);
         }
 
         return () => clearInterval(interval);
-    }, [gameState, round, inputVal, roundsHistory, score]); // Dependencies for closure
+    }, [gameState, endTime, inputVal, roundsHistory, score]); // Dependencies for closure
 
     // Load high score
     useEffect(() => {
